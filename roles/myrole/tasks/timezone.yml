@@ -1,0 +1,7 @@
+---
+# /etc/sysconfig/clockのZONE変更
+- name: ZONE置換
+  replace:
+    path: /etc/sysconfig/clock
+    regexp: '^ZONE="UTC"$'
+    replace: '# ZONE="UTC"\nZONE="Japan"'
