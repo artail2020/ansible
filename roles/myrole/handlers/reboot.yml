@@ -1,0 +1,5 @@
+---
+# タイムゾーン変更後、再起動
+- name: reboot_timezone
+  reboot:
+  become: yes

@@ -1,7 +1,17 @@
 ---
 # /etc/sysconfig/clockのZONE変更
-- name: ZONE置換
+- name: replace timezone
   replace:
     path: /etc/sysconfig/clock
     regexp: '^ZONE="UTC"$'
     replace: '# ZONE="UTC"\nZONE="Japan"'
+  become: yes
+# /usr/share/zoneinfo/Japanへのシンボリックリンクを/etc/localtimeに作成
+- name: create symbolic link
+  file:
+    src: /usr/share/zoneinfo/Japan
+    dest: /etc/localtime
+    state: link
+    force: yes
+  become: yes
+  notify: reboot_timezone
