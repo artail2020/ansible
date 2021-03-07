@@ -1,0 +1,27 @@
+---
+- set_fact:
+    ansible_facts:
+      pkg_mgr: yum
+# mariaDBのアンインストール
+- name: remove mariaDB
+  yum:
+    name: mariadb-libs
+    state: absent
+  become: yes
+# 必要パッケージのインストール
+- name: install packages
+  yum:
+    name:
+      - git
+      - gcc
+      - gcc-c++
+      - make
+      - openssl-devel
+      - zlib-devel
+      - readline-devel
+      - mysql
+      - mysql-devel
+      - golang
+      - fuse
+    state: present
+  become: yes
