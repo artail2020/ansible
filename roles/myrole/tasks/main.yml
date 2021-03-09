@@ -1,4 +1,5 @@
 ---
 # tasks file for myrole
-- include_tasks: timezone.yml
-- include_tasks: yum_install.yml
+- import_tasks: timezone.yml
+- import_tasks: yum_install.yml
+- import_tasks: nginx_install.yml

@@ -1,0 +1,26 @@
+---
+# nginxインストール可かチェック
+- name: nginx package list in local
+  yum:
+    disablerepo: "*"
+    list: nginx
+  register: installed_pkgs
+  become: yes
+# nginxをyumでインストール可に変更
+- name: nginx enable if not enabled
+  command: amazon-linux-extras enable nginx1
+  when: installed_pkgs.results | length == 0
+  become: yes
+# yumでnginxインストール
+- name: yum install nginx
+  yum:
+    name: nginx
+    state: present
+  become: yes
+# nginx自動起動をenabled
+- name: nginx enabled
+  service:
+    name: nginx
+    enabled: yes
+  become: yes
+  notify: nginx_restarted

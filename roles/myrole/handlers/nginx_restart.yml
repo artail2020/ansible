@@ -1,0 +1,7 @@
+---
+# nginx再起動
+- name: nginx_restarted
+  service:
+    name: nginx
+    state: restarted
+  become: yes

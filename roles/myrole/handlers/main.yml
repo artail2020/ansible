@@ -1,3 +1,4 @@
 ---
 # handlers file for myrole
-- include_tasks: reboot.yml
+- import_tasks: reboot.yml
+- import_tasks: nginx_restart.yml
