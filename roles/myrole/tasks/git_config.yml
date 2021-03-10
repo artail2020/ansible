@@ -1,0 +1,12 @@
+---
+# git configにname,email設定
+- name: git config setting
+  git_config:
+    scope: global
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+  loop:
+    - name: user.name
+      value: artail2020
+    - name: user.email
+      value: artail2012@gmail.com

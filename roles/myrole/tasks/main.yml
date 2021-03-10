@@ -1,5 +1,10 @@
 ---
 # tasks file for myrole
+# タイムゾーン変更
 - import_tasks: timezone.yml
+# yum パッケージインストール
 - import_tasks: yum_install.yml
+# nginxインストール・起動
 - import_tasks: nginx_install.yml
+# git config設定
+- import_tasks: git_config.yml
