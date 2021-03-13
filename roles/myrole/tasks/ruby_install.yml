@@ -1,0 +1,56 @@
+---
+# git経由でrbenvインストール
+- name: rbenv install from git
+  git:
+    repo: 'https://github.com/sstephenson/rbenv.git'
+    dest: "{{ rbenv_path }}"
+  become: yes
+# 環境変数設定シェル作成
+- name: create shell rbenv_env
+  copy:
+    dest: /etc/profile.d/rbenv.sh
+    content: |
+      export RBENV_ROOT="/opt/rbenv"
+      export PATH="${RBENV_ROOT}/bin:${PATH}"
+      eval "$(rbenv init -)"
+    mode: "0755"
+  become: yes
+# ruby-buildインストール
+- name: ruby-build install from git
+  git:
+    repo: 'https://github.com/sstephenson/ruby-build.git'
+    dest: "{{ rbenv_path }}/plugins/ruby-build"
+  become: yes
+# rbenv権限をec2-userに変更
+- name: change rbenv owner ec2-user
+  file:
+    path: "{{ rbenv_path }}"
+    state: directory
+    owner: ec2-user
+    mode: "0775"
+    recurse: yes
+  become: yes
+# 環境変数読み込み
+- name: load rbenv_env
+  shell: source /etc/profile.d/rbenv.sh
+# ruby2.7.2インストール・グローバル・同期
+- name: ruby install
+  shell: "{{ rbenv_path }}/bin/rbenv install {{ ruby_version }} --skip-existing"
+- name: ruby global set
+  shell: "{{ rbenv_path }}/bin/rbenv global {{ ruby_version }}"
+- name: ruby rehash
+  shell: "{{ rbenv_path }}/bin/rbenv rehash"
+# Bundlerインストール
+- name: install bundler
+  gem:
+    name: bundler
+    version: "{{ bundler_version }}"
+    executable: "{{ rbenv_path }}/shims/gem"
+    user_install: no
+# railsインストール
+- name: install bundler
+  gem:
+    name: rails
+    version: "{{ rails_version }}"
+    executable: "{{ rbenv_path }}/shims/gem"
+    user_install: no

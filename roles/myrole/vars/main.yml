@@ -1,2 +1,7 @@
 ---
 # vars file for myrole
+# path rbenv
+rbenv_path: /opt/rbenv
+ruby_version: 2.7.2
+bundler_version: 2.1.4
+rails_version: 6.0.3.4
