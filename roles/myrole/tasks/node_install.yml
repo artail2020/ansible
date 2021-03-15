@@ -1,0 +1,26 @@
+---
+# インストールシェル取得
+- name: get nvm shell
+  get_url:
+    url: 'https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh'
+    dest: "{{ ansible_env.HOME }}/install.sh"
+# nvmインストール
+- name: nvm install
+  shell: "{{ ansible_env.HOME }}/install.sh"
+  args:
+    creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+# nvm有効化設定
+- name: nvm activate
+  blockinfile:
+    path: "{{ ansible_env.HOME }}/.bash_profile"
+    block: |
+      if [[ -s ~/.nvm/nvm.sh ]] ; then
+        source ~/.nvm/nvm.sh ;
+      fi
+    marker: "# {mark} ANSIBLE MANAGED BLOCK NVM"
+# nodeインストール
+- name: node install
+  shell: bash -lc "nvm install {{ node_version }}"
+# nodeバージョン指定
+- name: node use
+  shell: bash -lc "nvm use v{{ node_version }}"
