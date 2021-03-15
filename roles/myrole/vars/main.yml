@@ -2,6 +2,9 @@
 # vars file for myrole
 # path rbenv
 rbenv_path: /opt/rbenv
+# ruby version
 ruby_version: 2.7.2
+# bundler version
 bundler_version: 2.1.4
+# rails version
 rails_version: 6.0.3.4
