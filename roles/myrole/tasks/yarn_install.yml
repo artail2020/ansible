@@ -1,0 +1,14 @@
+---
+# rbenvインストール済であるかを確認
+- name: yarn installed check
+  shell: yarn --version
+  register: yarn_exists
+  changed_when: false
+  ignore_errors: yes
+# npmでyarnインストール
+- name: yarn install
+  npm:
+    name: yarn
+    global: yes
+    state: present
+  when: yarn_exists is failed

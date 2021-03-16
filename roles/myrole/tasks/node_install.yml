@@ -24,3 +24,8 @@
 # nodeバージョン指定
 - name: node use
   shell: bash -lc "nvm use v{{ node_version }}"
+# インストールシェル削除
+- name: remove nvm shell
+  file:
+    path: "{{ ansible_env.HOME }}/install.sh"
+    state: absent
