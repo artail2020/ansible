@@ -14,3 +14,5 @@
 - import_tasks: node_install.yml
 # yarnインストール
 - import_tasks: yarn_install.yml
+# railsアプリデプロイ
+- import_tasks: app_deploy.yml

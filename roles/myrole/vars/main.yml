@@ -10,3 +10,5 @@ bundler_version: 2.1.4
 rails_version: 6.0.3.4
 # node version
 node_version: 15.11.0
+# app base directory path
+app_base_path: /var/www/rails

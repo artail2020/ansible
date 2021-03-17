@@ -58,17 +58,15 @@
 - name: ruby rehash
   shell: "{{ rbenv_path }}/bin/rbenv rehash"
   when: ruby_exists is failed
-# Bundlerインストール
-- name: install bundler
+# Bundler・railsインストール
+- name: install bundler and rails
   gem:
-    name: bundler
-    version: "{{ bundler_version }}"
+    name: "{{ item.name }}"
+    version: "{{ item.version }}"
     executable: "{{ rbenv_path }}/shims/gem"
     user_install: no
-# railsインストール
-- name: install rails
-  gem:
-    name: rails
-    version: "{{ rails_version }}"
-    executable: "{{ rbenv_path }}/shims/gem"
-    user_install: no
+  loop:
+    - name: bundler
+      version: "{{ bundler_version }}"
+    - name: rails
+      version: "{{ rails_version }}"

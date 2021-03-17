@@ -1,0 +1,10 @@
+---
+# アプリデプロイ先ディレクトリ作成
+- name: create app base directory
+  file:
+    path: "{{ app_base_path }}"
+    state: directory
+    owner: ec2-user
+    group: ec2-user
+    recurse: yes
+  become: yes
