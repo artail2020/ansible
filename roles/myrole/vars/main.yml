@@ -12,3 +12,5 @@ rails_version: 6.0.3.4
 node_version: 15.11.0
 # app base directory path
 app_base_path: /var/www/rails
+# application name
+app_name: association_tutorial

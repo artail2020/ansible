@@ -30,13 +30,13 @@
     dest: "{{ rbenv_path }}/plugins/ruby-build"
   become: yes
   when: rbenv_exists is failed
-# rbenv権限をec2-userに変更
-- name: change rbenv owner ec2-user
+# rbenv権限をSSHユーザーに変更
+- name: change rbenv owner ssh user
   file:
     path: "{{ rbenv_path }}"
     state: directory
-    owner: ec2-user
-    group: ec2-user
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     mode: "0775"
     recurse: yes
   become: yes
