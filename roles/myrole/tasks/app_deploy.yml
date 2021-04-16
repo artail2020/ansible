@@ -23,3 +23,58 @@
     dest: "{{ app_base_path }}/{{ app_name }}"
     key_file: "{{ ansible_env.HOME }}/.ssh/{{ github_ssh_private_key_file_name }}"
     accept_hostkey: yes
+# config配下のファイルをtemplateから複製
+- name: config file copy from template
+  copy:
+    src: "{{ item.source }}"
+    dest: "{{ item.dest }}"
+    remote_src: yes
+  loop:
+    - source: "{{ app_base_path }}/{{ app_name }}/config/database-template.yml"
+      dest: "{{ app_base_path }}/{{ app_name }}/config/database.yml"
+    - source: "{{ app_base_path }}/{{ app_name }}/config/environments/development-template.rb"
+      dest: "{{ app_base_path }}/{{ app_name }}/config/environments/development.rb"
+    - source: "{{ app_base_path }}/{{ app_name }}/config/puma-template.rb"
+      dest: "{{ app_base_path }}/{{ app_name }}/config/puma.rb"
+# database.ymlにユーザー・パスワード・エンドポイントを反映
+- name: database config replace user, password, host
+  replace:
+    path: "{{ app_base_path }}/{{ app_name }}/config/database.yml"
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  loop:
+    - regexp: "# user"
+      replace: "{{ db_username }}"
+    - regexp: "# password"
+      replace: "{{ db_password }}"
+    - regexp: "# host"
+      replace: "{{ db_rds_host }}"
+# development.rbにconfig.hostsを追加
+- name: environments/development add hosts
+  replace:
+    path: "{{ app_base_path }}/{{ app_name }}/config/environments/development.rb"
+    regexp: '^end$'
+    replace: '  config.hosts << ''.amazonaws.com''\nend'
+# puma.rbのポート指定コメントアウト、sockファイルのbind追加
+- name: puma port fetch commentout
+  replace:
+    path: "{{ app_base_path }}/{{ app_name }}/config/puma.rb"
+    regexp: '^port'
+    replace: '# port'
+- name: puma insert sock file bind
+  lineinfile:
+    path: "{{ app_base_path }}/{{ app_name }}/config/puma.rb"
+    insertafter: '^# port'
+    line: 'bind "unix://#{Rails.root}/tmp/sockets/puma.sock"'
+# nginx設定ファイルをfilesフォルダから転送
+- name: nginx to puma config file copy
+  copy:
+    src: "files/{{ app_name }}.conf"
+    dest: "/etc/nginx/conf.d/{{ app_name }}.conf"
+  become: yes
+  notify: nginx_restarted
+# bundleインストール
+- name: bundle install
+  command: "{{ rbenv_path }}/shims/bundle install"
+  args:
+    chdir: "{{ app_base_path }}/{{ app_name }}/"
