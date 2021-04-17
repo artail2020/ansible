@@ -66,15 +66,51 @@
     path: "{{ app_base_path }}/{{ app_name }}/config/puma.rb"
     insertafter: '^# port'
     line: 'bind "unix://#{Rails.root}/tmp/sockets/puma.sock"'
-# nginx設定ファイルをfilesフォルダから転送
+# nginx設定ファイルを転送
 - name: nginx to puma config file copy
   copy:
-    src: "files/{{ app_name }}.conf"
+    src: "{{ app_name }}.conf"
     dest: "/etc/nginx/conf.d/{{ app_name }}.conf"
   become: yes
   notify: nginx_restarted
+# yarn パッケージインストール
+- name: yarn package install
+  yarn:
+    path: "{{ app_base_path }}/{{ app_name }}/"
 # bundleインストール
 - name: bundle install
   command: "{{ rbenv_path }}/shims/bundle install"
   args:
     chdir: "{{ app_base_path }}/{{ app_name }}/"
+# rails データベース構築・反映
+- name: rails DB create
+  command: "{{ rbenv_path }}/shims/rails db:create"
+  args:
+    chdir: "{{ app_base_path }}/{{ app_name }}/"
+- name: rails DB migrate
+  command: "{{ rbenv_path }}/shims/rails db:migrate"
+  args:
+    chdir: "{{ app_base_path }}/{{ app_name }}/"
+# puma 起動シェルを作成
+- name: create shell puma start
+  copy:
+    dest: "{{ ansible_env.HOME }}/puma.sh"
+    content: |
+      #!/bin/bash
+      cd /var/www/rails/association_tutorial
+      bundle exec rails s
+    mode: "0755"
+# puma systemd定義ファイルを転送
+- name: puma unit add systemd
+  copy:
+    src: puma.service
+    dest: /etc/systemd/system/puma.service
+  become: yes
+# systemdリロード後puma起動・自動起動有効化
+- name: systemd reload, puma restart and enable
+  systemd:
+    name: puma
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+  become: yes
