@@ -1,0 +1,26 @@
+---
+# go/binディレクトリを作成
+- name: create go directory
+  file:
+    path: "{{ go_path }}/bin"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0775"
+    recurse: yes
+  become: yes
+# GOPATHを環境変数に設定
+- name: go path set env
+  blockinfile:
+    path: "{{ ansible_env.HOME }}/.bash_profile"
+    block: "export GOPATH={{ go_path }}\nexport PATH=${GOPATH}/bin:${PATH}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK GO"
+# 環境変数読み込み
+- name: load go path env
+  shell: "source {{ ansible_env.HOME }}/.bash_profile"
+# goofysダウンロード
+- name: get goofys
+  get_url:
+    url: 'https://github.com/kahing/goofys/releases/latest/download/goofys'
+    dest: "{{ go_path }}/bin/goofys"
+    mode: "0755"

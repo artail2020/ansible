@@ -14,5 +14,7 @@
 - import_tasks: node_install.yml
 # yarnインストール
 - import_tasks: yarn_install.yml
+# goofysインストール
+- import_tasks: goofys_install.yml
 # railsアプリデプロイ
 - import_tasks: app_deploy.yml
