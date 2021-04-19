@@ -4,6 +4,7 @@
   get_url:
     url: 'https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh'
     dest: "{{ ansible_env.HOME }}/install.sh"
+    mode: "0775"
 # nvmインストール
 - name: nvm install
   shell: "{{ ansible_env.HOME }}/install.sh"
