@@ -1,17 +1,10 @@
 ---
-# /etc/sysconfig/clockのZONE変更
-- name: replace timezone
-  replace:
-    path: /etc/sysconfig/clock
-    regexp: '^ZONE="UTC"$'
-    replace: '# ZONE="UTC"\nZONE="Japan"'
+# タイムゾーンをAsia/Tokyoに変更
+- name: set timezone to Asia/Tokyo
+  timezone:
+    name: Asia/Tokyo
   become: yes
-# /usr/share/zoneinfo/Japanへのシンボリックリンクを/etc/localtimeに作成
-- name: create symbolic link
-  file:
-    src: /usr/share/zoneinfo/Japan
-    dest: /etc/localtime
-    state: link
-    force: yes
+# ロケールをja_JP.UTF-8に変更
+- name: set locale to ja_JP
+  command: localectl set-locale LANG=ja_JP.UTF-8
   become: yes
-  notify: reboot_timezone
