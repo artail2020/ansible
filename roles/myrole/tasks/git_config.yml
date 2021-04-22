@@ -7,6 +7,6 @@
     value: "{{ item.value }}"
   loop:
     - name: user.name
-      value: artail2020
+      value: "{{ git_user_name }}"
     - name: user.email
-      value: artail2012@gmail.com
+      value: "{{ git_user_email }}"

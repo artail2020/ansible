@@ -1,7 +1,7 @@
 ---
 # rbenvインストール済であるかを確認
 - name: rbenv installed check
-  shell: "{{ rbenv_path }}/bin/rbenv --version"
+  command: "{{ rbenv_path }}/bin/rbenv --version"
   register: rbenv_exists
   changed_when: false
   ignore_errors: yes
@@ -14,12 +14,9 @@
   when: rbenv_exists is failed
 # 環境変数設定シェル作成
 - name: create shell rbenv_env
-  copy:
+  template:
+    src: ruby_install/rbenv.sh.j2
     dest: /etc/profile.d/rbenv.sh
-    content: |
-      export RBENV_ROOT="/opt/rbenv"
-      export PATH="${RBENV_ROOT}/bin:${PATH}"
-      eval "$(rbenv init -)"
     mode: "0755"
   become: yes
   when: rbenv_exists is failed
@@ -40,24 +37,26 @@
     mode: "0775"
     recurse: yes
   become: yes
-# 環境変数読み込み
-- name: load rbenv_env
-  shell: source /etc/profile.d/rbenv.sh
-# ruby2.7.2インストール・グローバル・同期
+# rbenvインストール済バージョン確認
 - name: ruby installed check
-  shell: "{{ rbenv_path }}/shims/ruby --version"
-  register: ruby_exists
+  command: "{{ rbenv_path }}/bin/rbenv versions"
+  register: rbenv_versions
   changed_when: false
   ignore_errors: yes
+# 所定のバージョンのrubyがなければインストール
 - name: ruby install
-  shell: "{{ rbenv_path }}/bin/rbenv install {{ ruby_version }} --skip-existing"
-  when: ruby_exists is failed
+  command: "{{ rbenv_path }}/bin/rbenv install {{ ruby_version }}"
+  when: ruby_version not in rbenv_versions.stdout
+  environment:
+    CONFIGURE_OPTS: "--disable-install-doc --disable-install-rdoc --disable-install-capi"
+# rubyグローバルバージョン確認
+- name: ruby global version check
+  command: "{{ rbenv_path }}/bin/rbenv global"
+  register: ruby_global_version
+# rubyグローバルバージョンを変更
 - name: ruby global set
-  shell: "{{ rbenv_path }}/bin/rbenv global {{ ruby_version }}"
-  when: ruby_exists is failed
-- name: ruby rehash
-  shell: "{{ rbenv_path }}/bin/rbenv rehash"
-  when: ruby_exists is failed
+  command: "{{ rbenv_path }}/bin/rbenv global {{ ruby_version }}"
+  when: ruby_version not in ruby_global_version.stdout
 # Bundler・railsインストール
 - name: install bundler and rails
   gem:
