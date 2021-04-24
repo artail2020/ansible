@@ -1,15 +1,21 @@
 ---
+# nodeバージョン確認
+- name: node installed check
+  shell: /bin/bash -lc "node -v"
+  register: node_installed_check
+  changed_when: false
+  ignore_errors: yes
 # インストールシェル取得
 - name: get nvm shell
-  get_url:
+  uri:
     url: 'https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh'
-    dest: "{{ ansible_env.HOME }}/install.sh"
-    mode: "0775"
+    return_content: yes
+  register: get_nvm_shell
+  when: node_installed_check is failed
 # nvmインストール
 - name: nvm install
-  shell: "{{ ansible_env.HOME }}/install.sh"
-  args:
-    creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+  shell: "{{ get_nvm_shell.content }}"
+  when: node_installed_check is failed
 # nvm有効化設定
 - name: nvm activate
   blockinfile:
@@ -21,12 +27,9 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK NVM"
 # nodeインストール
 - name: node install
-  shell: bash -lc "nvm install {{ node_version }}"
+  shell: /bin/bash -lc "nvm install {{ node_version }}"
+  when: node_version not in node_installed_check.stdout
 # nodeバージョン指定
 - name: node use
-  shell: bash -lc "nvm use v{{ node_version }}"
-# インストールシェル削除
-- name: remove nvm shell
-  file:
-    path: "{{ ansible_env.HOME }}/install.sh"
-    state: absent
+  shell: /bin/bash -lc "nvm use v{{ node_version }}"
+  when: node_version not in node_installed_check.stdout

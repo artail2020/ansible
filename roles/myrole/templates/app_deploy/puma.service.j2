@@ -1,0 +1,13 @@
+[Unit]
+Description=Rails app asservice
+After=network.target
+
+[Service]
+Type=simple
+Environment="PATH={{ go_path }}/bin:/home/{{ ansible_ssh_user }}/.nvm/versions/node/v{{ node_version }}/bin:{{ rbenv_path }}/shims:{{ rbenv_path }}/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/{{ ansible_ssh_user }}/.local/bin:/home/{{ ansible_ssh_user }}/bin"
+ExecStart=/home/{{ ansible_ssh_user }}/puma.sh
+Restart=always
+User={{ ansible_ssh_user }}
+
+[Install]
+WantedBy=multi-user.target

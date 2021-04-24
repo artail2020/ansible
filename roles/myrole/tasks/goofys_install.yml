@@ -15,9 +15,6 @@
     path: "{{ ansible_env.HOME }}/.bash_profile"
     block: "export GOPATH={{ go_path }}\nexport PATH=${GOPATH}/bin:${PATH}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK GO"
-# 環境変数読み込み
-- name: load go path env
-  shell: "source {{ ansible_env.HOME }}/.bash_profile"
 # goofysダウンロード
 - name: get goofys
   get_url:

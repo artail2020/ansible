@@ -1,11 +1,11 @@
 upstream puma {
-    server unix:///var/www/rails/association_tutorial/tmp/sockets/puma.sock fail_timeout=0;
+    server unix://{{ app_base_path }}/{{ app_name }}/tmp/sockets/puma.sock fail_timeout=0;
 }
 server {
     listen 80;
-    server_name localhost;
+    server_name _;
     keepalive_timeout 5;
-    root /var/www/rails/association_tutorial/public;
+    root {{ app_base_path }}/{{ app_name }}/public;
     location / {
         try_files $uri $uri/index.html $uri.html @app;
     }
@@ -25,7 +25,6 @@ server {
     }
 
     error_page 500 502 503 504 /500.html;
-    location = /500.html {
-        root /var/www/rails/association_tutorial/public;
+        location = /500.html {
     }
 }
