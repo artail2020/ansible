@@ -4,9 +4,7 @@ ansible_port:
 ansible_user:
 ### ssh private key file ###
 ansible_ssh_private_key_file:
-### github ssh private key file name ###
-github_ssh_private_key_file_name:
-### DB password ###
-db_password:
 ### S3 bucket name ###
 s3_bucket_name:
+### DB password ###
+db_password:

@@ -8,20 +8,29 @@
     group: "{{ ansible_user }}"
     recurse: yes
   become: yes
-# github連携用の秘密鍵を~/.ssh配下へ転送
-- name: export github private key
-  copy:
-    src: "~/.ssh/{{ github_ssh_private_key_file_name }}"
-    dest: "{{ ansible_env.HOME }}/.ssh/{{ github_ssh_private_key_file_name }}"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+# github連携用の秘密鍵・公開鍵を生成
+- name: generate ssh key
+  community.crypto.openssh_keypair:
+    path: "{{ ansible_env.HOME }}/.ssh/{{ private_ip_address }}_git_rsa"
     mode: "0400"
+# 公開鍵をgithubのアプリのリポジトリに登録
+- name: read-only deploy key output register
+  command: "cat {{ ansible_env.HOME }}/.ssh/{{ private_ip_address }}_git_rsa.pub"
+  register: pub_key
+- name: add read-only deploy key to github repository
+  community.general.github_deploy_key:
+    owner: "{{ git_user_name }}"
+    repo: "{{ app_name }}"
+    name: "{{ private_ip_address }}_git_rsa.pub"
+    key: "{{ pub_key.stdout }}"
+    read_only: yes
+    token: "{{ lookup('env', 'GITHUB_ACCESS_TOKEN') }}"
 # githubからアプリをクローン
 - name: git clone application from github
   git:
     repo: git@github.com:artail2020/association_tutorial.git
     dest: "{{ app_base_path }}/{{ app_name }}"
-    key_file: "{{ ansible_env.HOME }}/.ssh/{{ github_ssh_private_key_file_name }}"
+    key_file: "{{ ansible_env.HOME }}/.ssh/{{ private_ip_address }}_git_rsa"
     accept_hostkey: yes
 # config配下のファイルをtemplateから複製
 - name: config file copy from template
