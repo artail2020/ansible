@@ -28,7 +28,7 @@
 # githubからアプリをクローン
 - name: git clone application from github
   git:
-    repo: git@github.com:artail2020/association_tutorial.git
+    repo: "git@github.com:{{ git_user_name }}/{{ app_name }}.git"
     dest: "{{ app_base_path }}/{{ app_name }}"
     key_file: "{{ ansible_env.HOME }}/.ssh/{{ private_ip_address }}_git_rsa"
     accept_hostkey: yes
@@ -136,12 +136,19 @@
     group: "{{ ansible_user }}"
     mode: "0755"
     recurse: yes
+# 実行ユーザーのUID・GIDを取得
+- name: ansible_user uid output register
+  command: "id -u"
+  register: ansible_user_uid
+- name: ansible_user gid output register
+  command: "id -g"
+  register: ansible_user_gid
 # 画像ディレクトリにS3バケットをマウント
 - name: S3 mount image uploads directory
   mount:
     path: "{{ app_base_path }}/{{ app_name }}/public/uploads"
     src: "{{ go_path }}/bin/goofys#{{ s3_bucket_name }}"
     fstype: fuse
-    opts: _netdev,allow_other,--dir-mode=0755,--file-mode=0644,--uid=1000,--gid=1000
+    opts: "_netdev,allow_other,--dir-mode=0755,--file-mode=0644,--uid={{ ansible_user_uid }},--gid={{ ansible_user_gid }}"
     state: mounted
   become: yes
