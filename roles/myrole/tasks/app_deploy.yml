@@ -53,11 +53,11 @@
     replace: "{{ item.replace }}"
   loop:
     - regexp: "# user"
-      replace: "{{ hostvars['database-cf-1'].master_username }}"
+      replace: "{{ hostvars[db_instance_name].master_username }}"
     - regexp: "# password"
       replace: "{{ db_password }}"
     - regexp: "# host"
-      replace: "{{ hostvars['database-cf-1'].endpoint.address }}"
+      replace: "{{ hostvars[db_instance_name].endpoint.address }}"
 # development.rbにconfig.hostsを追加
 - name: environments/development add hosts
   lineinfile:
@@ -149,6 +149,6 @@
     path: "{{ app_base_path }}/{{ app_name }}/public/uploads"
     src: "{{ go_path }}/bin/goofys#{{ s3_bucket_name }}"
     fstype: fuse
-    opts: "_netdev,allow_other,--dir-mode=0755,--file-mode=0644,--uid={{ ansible_user_uid }},--gid={{ ansible_user_gid }}"
+    opts: "_netdev,allow_other,--dir-mode=0755,--file-mode=0644,--uid={{ ansible_user_uid.stdout }},--gid={{ ansible_user_gid.stdout }}"
     state: mounted
   become: yes

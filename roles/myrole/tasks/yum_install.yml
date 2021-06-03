@@ -2,6 +2,44 @@
 - set_fact:
     ansible_facts:
       pkg_mgr: yum
+# mariaDB削除
+- name: uninstall mariaDB
+  yum:
+    name: mariadb-libs
+    state: absent
+  become: yes
+# MySQL8.0 rpmインストール
+- name: mysql8.0 rpm install
+  yum:
+    name: https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
+    state: present
+  become: yes
+# MySQL アーカイブ用tmpディレクトリ作成
+- name: create mysql tmp directory
+  file:
+    path: /tmp/mysql
+    state: directory
+    owner: root
+    group: root
+    recurse: yes
+  become: yes
+# RDSと同一バージョンのアーカイブtarを解凍
+- name: mysql archive tar unarchive
+  unarchive:
+    src: "https://downloads.mysql.com/archives/get/p/23/file/mysql-{{ hostvars[db_instance_name].engine_version }}-1.el7.x86_64.rpm-bundle.tar"
+    dest: /tmp/mysql
+    remote_src: yes
+  become: yes
+# MySQL アーカイブrpmからインストール
+- name: mysql archive rpm install
+  yum:
+    name:
+      - "/tmp/mysql/mysql-community-client-{{ hostvars[db_instance_name].engine_version }}-1.el7.x86_64.rpm"
+      - "/tmp/mysql/mysql-community-common-{{ hostvars[db_instance_name].engine_version }}-1.el7.x86_64.rpm"
+      - "/tmp/mysql/mysql-community-devel-{{ hostvars[db_instance_name].engine_version }}-1.el7.x86_64.rpm"
+      - "/tmp/mysql/mysql-community-libs-{{ hostvars[db_instance_name].engine_version }}-1.el7.x86_64.rpm"
+    state: present
+  become: yes
 # 必要パッケージのインストール
 - name: install packages
   yum:
@@ -13,8 +51,6 @@
       - openssl-devel
       - zlib-devel
       - readline-devel
-      - mysql
-      - mysql-devel
       - golang
       - fuse
       - yum-cron
