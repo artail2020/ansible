@@ -1,0 +1,9 @@
+---
+# tasks file for set_timezone
+# タイムゾーンを変更
+- name: set timezone
+  timezone:
+    name: "{{ timezone_name }}"
+# ロケールを変更
+- name: set locale to ja_JP
+  command: "localectl set-locale LANG={{ locale_lang }}"

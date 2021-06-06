@@ -1,4 +1,7 @@
 ---
 - hosts: webservers
   roles:
+    # タイムゾーン変更
+    - role: set_timezone
+      become: yes
     - myrole
