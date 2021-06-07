@@ -1,0 +1,4 @@
+---
+# vars file for roles/yum_install
+# tmp mysql directory
+tmp_mysql_dir: /tmp/mysql

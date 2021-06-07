@@ -1,5 +1,5 @@
 ---
-# vars file for set_timezone
+# vars file for roles/set_timezone
 # timezone name
 timezone_name: Asia/Tokyo
 # locale lang

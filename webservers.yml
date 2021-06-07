@@ -4,4 +4,7 @@
     # タイムゾーン変更
     - role: set_timezone
       become: yes
+    # yum パッケージインストール
+    - role: yum_install
+      become: yes
     - myrole

@@ -1,7 +1,5 @@
 ---
 # tasks file for myrole
-# yum パッケージインストール
-- import_tasks: yum_install.yml
 # nginxインストール・起動
 - import_tasks: nginx_install.yml
 # git config設定
