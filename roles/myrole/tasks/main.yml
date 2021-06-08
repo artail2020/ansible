@@ -1,7 +1,5 @@
 ---
 # tasks file for myrole
-# nginxインストール・起動
-- import_tasks: nginx_install.yml
 # git config設定
 - import_tasks: git_config.yml
 # rubyインストール

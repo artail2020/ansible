@@ -7,4 +7,7 @@
     # yum パッケージインストール
     - role: yum_install
       become: yes
+    # nginxインストール・起動
+    - role: nginx_install
+      become: yes
     - myrole

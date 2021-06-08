@@ -1,4 +1,5 @@
 ---
+# handlers file for roles/nginx_install
 # nginx再起動
 - name: nginx_restarted
   service:
