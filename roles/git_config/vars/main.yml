@@ -1,0 +1,5 @@
+---
+# vars file for roles/git_config
+# git user name, email
+git_user_name: artail2020
+git_user_email: artail2012@gmail.com

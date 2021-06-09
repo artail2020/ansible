@@ -1,4 +1,5 @@
 ---
+# tasks file for roles/git_config
 # git configにname,email設定
 - name: git config setting
   git_config:

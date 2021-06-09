@@ -10,4 +10,6 @@
     # nginxインストール・起動
     - role: nginx_install
       become: yes
+    # git config設定
+    - git_config
     - myrole
