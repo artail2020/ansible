@@ -12,4 +12,6 @@
       become: yes
     # git config設定
     - git_config
+    # rubyインストール
+    - ruby_install
     - myrole

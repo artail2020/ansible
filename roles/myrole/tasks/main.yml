@@ -1,7 +1,5 @@
 ---
 # tasks file for myrole
-# rubyインストール
-- import_tasks: ruby_install.yml
 # nodeインストール
 - import_tasks: node_install.yml
 # yarnインストール
