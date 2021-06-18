@@ -14,4 +14,6 @@
     - git_config
     # rubyインストール
     - ruby_install
+    # nodeインストール
+    - node_install
     - myrole

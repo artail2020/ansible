@@ -1,7 +1,5 @@
 ---
 # tasks file for myrole
-# nodeインストール
-- import_tasks: node_install.yml
 # yarnインストール
 - import_tasks: yarn_install.yml
 # goofysインストール
