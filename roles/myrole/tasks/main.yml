@@ -1,6 +1,4 @@
 ---
 # tasks file for myrole
-# goofysインストール
-- import_tasks: goofys_install.yml
 # railsアプリデプロイ
 - import_tasks: app_deploy.yml

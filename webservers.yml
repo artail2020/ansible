@@ -18,4 +18,6 @@
     - node_install
     # yarnインストール
     - yarn_install
+    # goofysインストール
+    - goofys_install
     - myrole

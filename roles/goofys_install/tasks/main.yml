@@ -1,4 +1,5 @@
 ---
+# tasks file for roles/goofys_install
 # go/binディレクトリを作成
 - name: create go directory
   file:

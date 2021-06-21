@@ -1,0 +1,4 @@
+---
+# vars file for roles/goofys_install
+# path go
+go_path: /opt/go
