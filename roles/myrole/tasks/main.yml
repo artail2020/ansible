@@ -1,7 +1,5 @@
 ---
 # tasks file for myrole
-# yarnインストール
-- import_tasks: yarn_install.yml
 # goofysインストール
 - import_tasks: goofys_install.yml
 # railsアプリデプロイ

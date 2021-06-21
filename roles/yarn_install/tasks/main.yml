@@ -1,5 +1,6 @@
 ---
-# rbenvインストール済であるかを確認
+# tasks file for roles/yarn_install
+# yarnインストール済であるかを確認
 - name: yarn installed check
   shell: yarn --version
   register: yarn_exists

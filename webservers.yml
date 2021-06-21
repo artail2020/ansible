@@ -16,4 +16,6 @@
     - ruby_install
     # nodeインストール
     - node_install
+    # yarnインストール
+    - yarn_install
     - myrole
