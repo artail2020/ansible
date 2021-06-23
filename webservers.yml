@@ -20,4 +20,5 @@
     - yarn_install
     # goofysインストール
     - goofys_install
-    - myrole
+    # railsアプリデプロイ
+    - app_deploy

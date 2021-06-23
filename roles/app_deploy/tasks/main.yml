@@ -1,4 +1,5 @@
 ---
+# tasks file for roles/app_deploy
 # アプリデプロイ先ディレクトリ作成
 - name: create app base directory
   file:
@@ -74,7 +75,7 @@
 # nginx設定ファイルを転送
 - name: nginx to puma config file copy
   template:
-    src: "app_deploy/{{ app_name }}.conf.j2"
+    src: "{{ app_name }}.conf.j2"
     dest: "/etc/nginx/conf.d/{{ app_name }}.conf"
   become: yes
   notify: nginx_restarted
@@ -110,13 +111,13 @@
 # puma 起動シェルを作成
 - name: create shell puma start
   template:
-    src: app_deploy/puma.sh.j2
+    src: puma.sh.j2
     dest: "{{ ansible_env.HOME }}/puma.sh"
     mode: "0755"
 # puma systemd定義ファイルを転送
 - name: puma unit add systemd
   template:
-    src: app_deploy/puma.service.j2
+    src: puma.service.j2
     dest: /etc/systemd/system/puma.service
   become: yes
 # systemdリロード後puma起動・自動起動有効化

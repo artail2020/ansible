@@ -1,0 +1,6 @@
+---
+# vars file for roles/app_deploy
+# app base directory path
+app_base_path: /var/www/rails
+# application name
+app_name: association_tutorial

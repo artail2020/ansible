@@ -1,4 +1,0 @@
----
-# tasks file for myrole
-# railsアプリデプロイ
-- import_tasks: app_deploy.yml
