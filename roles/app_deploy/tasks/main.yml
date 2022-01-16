@@ -55,8 +55,10 @@
   loop:
     - regexp: "# user"
       replace: "{{ hostvars[db_instance_name].master_username }}"
+      # replace: "{{ lookup('aws_secret', '').username }}"
     - regexp: "# password"
       replace: "{{ db_password }}"
+      # replace: "{{ lookup('aws_secret', '').password }}"
     - regexp: "# host"
       replace: "{{ hostvars[db_instance_name].endpoint.address }}"
 # development.rbにconfig.hostsを追加
