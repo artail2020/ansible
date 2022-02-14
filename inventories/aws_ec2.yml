@@ -3,5 +3,8 @@ regions:
   - ap-northeast-1
 groups:
   webservers: "tags.Name is match('.*app.*')"
+hostnames:
+  - private-ip-address
+  - ip-address
 compose:
   ansible_host: public_ip_address
